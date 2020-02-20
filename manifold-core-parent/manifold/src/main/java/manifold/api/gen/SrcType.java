@@ -19,6 +19,7 @@ package manifold.api.gen;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -150,6 +151,16 @@ public class SrcType extends SrcAnnotated<SrcType>
   public int getArrayDims()
   {
     return _arrayDims;
+  }
+
+  public boolean hasExtends()
+  {
+    return Objects.equals(_superOrExtends, "extends");
+  }
+
+  public boolean hasSuper()
+  {
+    return Objects.equals(_superOrExtends, "super");
   }
 
   public boolean isPrimitive()

@@ -46,7 +46,6 @@ import manifold.api.gen.SrcType;
 import manifold.api.host.IModule;
 import manifold.api.type.ITypeManifold;
 import manifold.ext.api.Extension;
-import manifold.ext.api.This;
 import manifold.internal.javac.ClassSymbols;
 import manifold.internal.javac.IDynamicJdk;
 import manifold.internal.javac.JavacPlugin;
@@ -238,7 +237,7 @@ class ExtCodeGen
       // short-circuit e.g., extension producers
       return Collections.emptySet();
     }
-    
+
     Set<String> fqns = new LinkedHashSet<>();
     findExtensionsOnDisk( fqns );
     findExtensionsFromExtensionClassProviders( fqns );
@@ -534,20 +533,9 @@ class ExtCodeGen
     return hasThisAnnotation( method, extendedType );
   }
 
-  private boolean hasThisAnnotation( AbstractSrcMethod method, SrcClass extendedType )
+  private boolean hasThisAnnotation( AbstractSrcMethod<?> method, SrcClass extendedType )
   {
-    List params = method.getParameters();
-    if( params.size() == 0 )
-    {
-      return false;
-    }
-    SrcParameter param = (SrcParameter)params.get( 0 );
-    if( !param.hasAnnotation( This.class ) )
-    {
-      return false;
-    }
-    // checking only for simple name for cases where the name cannot be resolved yet e.g., extension method on another source producer type
-    return param.getType().getName().endsWith( extendedType.getSimpleName() );
+    return ExtCodeGenUtils.hasValidThisAnnotation( method, extendedType );
   }
 
 //  private Symbol.MethodSymbol resolveMethod( Context ctx, JCDiagnostic.DiagnosticPosition pos, Name name, Type qual, com.sun.tools.javac.util.List<Type> args )
